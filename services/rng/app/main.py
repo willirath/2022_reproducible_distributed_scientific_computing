@@ -33,7 +33,6 @@ class Lgc(object):
         return (self.a * x + self.c) % self.m
 
     def query(self, x: int = None):
-
         if x is None:
             self.x = self.next_rand(x=self.x)
             return self.x
@@ -45,6 +44,12 @@ lgc = Lgc()
 
 
 @app.get("/lgc/")
-async def get_lgc(x: int = 0):
+async def get_lgc(x: int = None):
     """Query the LGC RNG for a random integer."""
     return lgc.query(x)
+
+
+@app.get("/lgc_params/")
+async def get_lgc():
+    """Query the LGC RNG for a random integer."""
+    return {"a": lgc.a, "c": lgc.c, "m": lgc.m}

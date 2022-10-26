@@ -5,12 +5,12 @@ services:
     build: ./rng
     expose:
       - 80
-    # container_name: rng
-    scale: 2
+    ports:
+      - 8888:80
+    container_name: rng
 
   particles:
     build: ./particles
     ports:
-      - "1000-9000:80"
-    # container_name: particles
-    scale: 10
+      - "80:80"
+    container_name: particle
