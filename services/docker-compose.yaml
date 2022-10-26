@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  rng:
+    build: ./rng
+    expose:
+      - 80
+    # container_name: rng
+    scale: 2
+
+  particles:
+    build: ./particles
+    ports:
+      - "1000-9000:80"
+    # container_name: particles
+    scale: 10
