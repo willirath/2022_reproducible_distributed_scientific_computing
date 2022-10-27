@@ -6,10 +6,12 @@ class Particle(object):
         self.x = x
         self.y = y
         self.t = t
-        self.lgc_params = requests.get("http://rng/lgc_params/").json()
+        self.lgc_params = requests.get(
+            "http://rng_loadbalancer:4000/lgc_params/"
+        ).json()
 
     def query_rng(self, x: int = None):
-        resp = requests.get("http://rng/lgc/", params={"x": x})
+        resp = requests.get("http://rng_loadbalancer:4000/lgc/", params={"x": x})
         return int(resp.json())
 
     def normal_rand(self, num_summed: int = 11):
