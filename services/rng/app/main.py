@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from time import sleep
+
 app = FastAPI()
 
 
@@ -10,7 +12,7 @@ class Lgc(object):
 
     Uses mapping
 
-    X = (a * X + c) mod m
+    x_next = (a * x + c) mod m
     
     with
     
@@ -32,7 +34,8 @@ class Lgc(object):
         """For a given x, return the next random x."""
         return (self.a * x + self.c) % self.m
 
-    def query(self, x: int = None):
+    def query(self, x: int = None, delay: float = 0.0):
+        sleep(delay)
         if x is None:
             self.x = self.next_rand(x=self.x)
             return self.x
@@ -44,9 +47,9 @@ lgc = Lgc()
 
 
 @app.get("/lgc/")
-async def get_lgc(x: int = None):
+async def get_lgc(x: int = None, delay: float = 0.0):
     """Query the LGC RNG for a random integer."""
-    return lgc.query(x)
+    return lgc.query(x, delay)
 
 
 @app.get("/lgc_params/")

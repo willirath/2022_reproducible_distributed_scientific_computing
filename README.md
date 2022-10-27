@@ -2,26 +2,49 @@
 
 ## Problem
 
-Random Walk application with different distributed components:
+Random Walk application with different components:
 
 - Random Number Generation
-- Particle Movement
+- Particle Set
 - External Fields
 - Data Aggregation
 
 ```mermaid
-graph LR;
-    RNG1-->PM1;
-    RNG1-->PM2;
-    RNG1-->PM3;
-    RNG2-->PM1;
-    RNG2-->PM2;
-    RNG2-->PM3;
-    EF-->PM1;
-    EF-->PM2;
-    EF-->PM3;
-    PM1-->DA;
-    PM2-->DA;
-    PM3-->DA;
+graph TD;
+    RNG-->PS;
+    EF-->PS;
+    PS-->DA;
 ```
 
+## Parallelisation
+
+We can follow different strategies here
+
+Either, we replicate all parts (and bring everything together in the data aggregation step):
+
+```mermaid
+graph TD;
+    RNG1-->PS1;
+    EF1-->PS1;
+    RNG2-->PS2;
+    EF2-->PS2;
+    PS1-->DA;
+    PS2-->DA;
+```
+
+Or, depending on where the actual cost is spent, we could go for more diverse patterns (where `EF` and `RNG` are load balancers):
+
+```mermaid
+graph TD;
+    RNG1-->RNG;
+    RNG2-->RNG;
+    RNG3-->RNG;
+    EF1-->EF;
+    EF2-->EF;
+    RNG-->PS1;
+    RNG-->PS2;
+    EF-->PS1;
+    EF-->PS2;
+    PS1-->DA;
+    PS2-->DA;
+```
