@@ -45,6 +45,8 @@ is the point in space where the mass-weighted sum of positions averages to zero.
 The moment of inertia (about the center of mass)
 $$MOI_l = \sum_{n=1}^N ((x^n_l-\bar{x}_l)^2 + (y^n_l-\bar{y}_l)^2)$$
 
+determines the torque one needs to apply in order to achieve an angular acceleration. _(More mass away from the center of mass means higher $MOI$.)_
+
 ### (Pseudo)-Random Number Generation (pRNG)
 
 Generating pseudo-random numbers is an own research field. There are criteria for "good" which are along the lines of requiring convergence towards the desired distribution and independence (or lack of predictability) between subsequent numbers.
