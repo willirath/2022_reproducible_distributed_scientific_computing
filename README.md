@@ -1,6 +1,6 @@
 # Reproducible Distributed Scientific Computing
 
-## Problem
+## Problem and introduction
 
 We'll work with a 2-dimensional [random walk](https://en.wikipedia.org/wiki/Random_walk) application with different components.
 
@@ -16,9 +16,9 @@ graph LR;
     User -->|query| DataAgg;
 ```
 
-## Discussion of the components
+### Discussion of the components
 
-### Particles
+#### Particles
 
 We'll handle `N` particles which are moving in small and random discrete steps. For a particle with index `n` which is at step `l`, the movement can be expressed as
 $$x^n_{l+1} = x^n_{l} + \delta x$$
@@ -27,7 +27,7 @@ $$\delta x, \delta y \in [-1, 1)$$
 
 where $\delta x$ and $\delta y$ are drawn from a uniform random distribution between -1 and 1.
 
-### Data Aggregation
+#### Data Aggregation
 
 With the position of particle $n$ at step $l$ being denoted as
 $$(x^n_l, y^n_l)$$
@@ -47,7 +47,7 @@ $$MOI_l = \sum_{n=1}^N ((x^n_l-\bar{x}_l)^2 + (y^n_l-\bar{y}_l)^2)$$
 
 determines the torque one needs to apply in order to achieve an angular acceleration. _(More mass away from the center of mass means higher $MOI$.)_
 
-### (Pseudo)-Random Number Generation (pRNG)
+#### (Pseudo)-Random Number Generation (pRNG)
 
 Generating pseudo-random numbers is an own research field. There are criteria for "good" which are along the lines of requiring convergence towards the desired distribution and independence (or lack of predictability) between subsequent numbers.
 
@@ -98,3 +98,11 @@ graph LR;
 ```
 
 *__Note__ that we can only parallelise into multiple instances of `Particles`, because in our simple problem, the individual particles don't interact with each other.*
+
+## Reproducibility
+
+To completely reproduce our non-parallelized example problem, we'd need to control the following aspects:
+- initial positions $(x^n_0, y^n_0)$ of all particles
+- initial states of the pRNG
+
+*__Note__ that we don't take into account effects from roundoff errors. If we cared for them, we'd also need to completely control the order of execution of all arithmetics in particle movement and in the data aggregation. If we'd simulate a chaotic physical system, we'd need to control roundoff errors as well.*
