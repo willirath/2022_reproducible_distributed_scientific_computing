@@ -37,8 +37,8 @@ we'll calculate two quantities which describe the overall distribution of the pa
 The center of mass
 $$COM_l = (\bar{x}_l, \bar{y}_l)$$
 with
-$$\bar{x}_l= \frac{1}{N}\sum_{n=1}^N x^n_l$$
-$$\bar{y}_l= \frac{1}{N}\sum_{n=1}^N y^n_l$$
+$$\bar{x}_l = \frac{1}{N}\sum_{n=1}^N x^n_l$$
+$$\bar{y}_l = \frac{1}{N}\sum_{n=1}^N y^n_l$$
 
 is the point in space where the mass-weighted sum of positions averages to zero. (Here, we assume that all particles have the same mass.)
 
