@@ -21,21 +21,22 @@ graph LR;
 ### Particles
 
 We'll handle `N` particles which are moving in small and random discrete steps. For a particle with index `n` which is at step `l`, the movement can be expressed as
-$$
-x^n_{l+1} = x^n_{l} + \delta x \\
-y^n_{l+1} = y^n_{l} + \delta y \\
-\delta x, \delta y \in [-1, 1)
-$$
+$$x^n_{l+1} = x^n_{l} + \delta x$$
+$$y^n_{l+1} = y^n_{l} + \delta y$$
+$$\delta x, \delta y \in [-1, 1)$$
+
 where $\delta x$ and $\delta y$ are drawn from a uniform random distribution between -1 and 1.
 
 ### Data Aggregation
 
 With the position of particle $n$ at step $l$ being denoted as
 $$(x^n_l, y^n_l)$$
+
 we'll calculate two quantities which describe the overall distribution of the particles at step $l$:
 
 The center of mass
 $$COM_l = (\bar{x}_l, \bar{y}_l) = \frac{1}{N}\sum_{n=1}^N (x^n_l, y^n_l)$$
+
 is the point in space where the mass-weighted sum of positions averages to zero. (Here, we assume that all particles have the same mass.)
 
 The moment of inertia (about the center of mass)
