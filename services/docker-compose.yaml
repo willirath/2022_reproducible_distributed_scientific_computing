@@ -7,7 +7,7 @@ services:
       - 80
     environment:
       - WEB_CONCURRENCY=1
-    scale: 5
+    scale: 1
 
   rng_loadbalancer:
     build: ./rng_loadbalancer
@@ -19,8 +19,18 @@ services:
 
   particles:
     build: ./particles
-    ports:
-      - "80:80"
+    expose:
+      - 80
     depends_on:
       - rng_loadbalancer
-    container_name: particles
+    scale: 5
+
+  data_agg:
+    build: ./data_agg
+    ports:
+      - "8080:80"
+    depends_on:
+      - particles
+    # environment:
+    #   - WEB_CONCURRENCY=1
+    container_name: data_agg
