@@ -34,7 +34,7 @@ class Lgc(object):
         """For a given x, return the next random x."""
         return (self.a * x + self.c) % self.m
 
-    def query(self, x: int = None, delay: float = 0.0):
+    def query(self, x: int = None, delay: float = 0.1):
         sleep(delay)
         if x is None:
             self.x = self.next_rand(x=self.x)
@@ -47,7 +47,7 @@ lgc = Lgc()
 
 
 @app.get("/lgc/")
-async def get_lgc(x: int = None, delay: float = 0.0):
+async def get_lgc(x: int = None, delay: float = 0.5):
     """Query the LGC RNG for a random integer."""
     return lgc.query(x, delay)
 

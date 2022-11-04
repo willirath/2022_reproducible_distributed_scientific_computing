@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, BackgroundTasks
 
 from particle import Particle
 
@@ -13,12 +13,8 @@ async def pos():
     return app.particle.position()
 
 
-@app.get("/step/")
-async def step():
+@app.post("/step/")
+async def step(background_tasks: BackgroundTasks):
     """Move current particle position."""
-    return app.particle.step()
-
-
-@app.get("/lgc_params/")
-async def lgc_params():
-    return app.particle.lgc_params
+    background_tasks.add_task(app.particle.step)
+    return {"message": "stepping"}

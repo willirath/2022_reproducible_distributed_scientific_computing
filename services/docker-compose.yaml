@@ -3,11 +3,12 @@ version: "3"
 services:
   rng:
     build: ./rng
-    expose:
-      - 80
     environment:
       - WEB_CONCURRENCY=1
-    scale: 1
+    expose:
+      - 80
+    scale: 4
+    cpus: 0.15
 
   rng_loadbalancer:
     build: ./rng_loadbalancer
@@ -19,18 +20,28 @@ services:
 
   particles:
     build: ./particles
+    environment:
+      - WEB_CONCURRENCY=1
     expose:
       - 80
     depends_on:
       - rng_loadbalancer
-    scale: 5
+    scale: 7
+    cpus: 0.2
 
   data_agg:
     build: ./data_agg
+    environment:
+      - WEB_CONCURRENCY=1
     ports:
       - "8080:80"
     depends_on:
       - particles
-    # environment:
-    #   - WEB_CONCURRENCY=1
+
     container_name: data_agg
+
+  data_agg_redis:
+    build: ./data_agg_redis
+    expose:
+      - 6379
+    container_name: data_agg_redis

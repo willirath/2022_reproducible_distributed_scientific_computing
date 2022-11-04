@@ -6,6 +6,7 @@ import numpy as np
 import asciichartpy
 
 import requests
+import redis
 
 app = FastAPI()
 
@@ -15,8 +16,8 @@ class DataAgg(object):
         """Initialize with number of particles."""
         self.num_particles = num_particles
         self.diags_init()
-        for _ in range(30):
-            self.diags_run()
+        self.timestep = 0
+        self.redis_store = redis.Redis(host="data_agg_redis", port=6379)
 
     def diags_init(self):
         self.diags = pd.DataFrame()
@@ -35,7 +36,7 @@ class DataAgg(object):
             ],
             ignore_index=True,
         )
-        self.diags = self.diags.tail(35).reset_index(drop=True)
+        self.diags = self.diags.tail(25).reset_index(drop=True)
 
     def diags_show(self):
         self.diags_run()
@@ -52,12 +53,14 @@ class DataAgg(object):
             ["== Random Walk Stats ==", com_x_chart, com_y_chart, moi_chart]
         )
 
+    def move_particles(self):
+        self.timestep += 1
+        self.redis_store.set("timestep", self.timestep)
+
     def query_particle_positions(self):
         positions = []
         for n in range(self.num_particles):
-            _ = requests.get(f"http://services_particles_{n+1:d}:80/step/")
             resp = requests.get(f"http://services_particles_{n+1:d}:80/pos/")
-            print(resp.json())
             positions.append(resp.json())
         return positions
 

@@ -22,8 +22,8 @@ class Particle(object):
         return normal
 
     def step(self):
-        self.x += self.normal_rand()
-        self.y += self.normal_rand()
+        self.x += 2 * self.query_rng() / self.lgc_params["m"] - 1.0
+        self.y += 2 * self.query_rng() / self.lgc_params["m"] - 1.0
         self.t += 1
 
     def position(self):
