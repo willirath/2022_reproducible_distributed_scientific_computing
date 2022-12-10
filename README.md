@@ -106,3 +106,46 @@ To completely reproduce our non-parallelized example problem, we'd need to contr
 - initial states of the pRNG
 
 *__Note__ that we don't take into account effects from roundoff errors. If we cared for them, we'd also need to completely control the order of execution of all arithmetics in particle movement and in the data aggregation. If we'd simulate a chaotic physical system, we'd need to control roundoff errors as well.*
+
+## Communication
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant DA as DataAgg
+    participant RD as Redis Relay
+    participant P as Particle
+    participant R as RNG
+
+    U->>+DA: Show stats for 10 time steps
+
+    DA->>+P: Set 10 time steps
+
+    par [calculation]
+
+        loop 10 times
+            loop pos in [X, Y]
+                P->>+R: Want random number
+                R->>R: Update random state
+                R->>-P: Send random number
+                P->>P: Update pos
+            end
+            
+            P->>RD: Store X, Y
+
+        end
+        
+        deactivate P
+    
+    and [data acquisition]
+
+        loop until 10 time steps
+            DA->>RD: want new data
+            RD->>DA: send new data
+        end
+    
+    end
+
+    DA->>-U: Stats for 10 time steps
+
+```
