@@ -48,6 +48,7 @@ class DataAgg(object):
             list(com_y), {"height": 5}
         )
         moi = df.groupby("t")["x"].var() + df.groupby("t")["y"].var()
+        print(moi)
         moi_chart = "moment of inertia:\n" + asciichartpy.plot(list(moi), {"height": 5})
         return "\n\n".join(
             ["== Random Walk Stats ==", com_x_chart, com_y_chart, moi_chart]
