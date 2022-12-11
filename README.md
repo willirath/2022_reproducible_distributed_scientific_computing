@@ -111,31 +111,34 @@ To completely reproduce our non-parallelized example problem, we'd need to contr
 
 ```mermaid
 sequenceDiagram
-    participant U as User
+    actor U as User
     participant DA as DataAgg
     participant RD as Redis Relay
     participant P as Particle
     participant R as RNG
 
-    U->>+DA: Show stats for 10 time steps
-
-    DA->>+P: Set 10 time steps
+    DA-)RD: Set Nstep
 
     par [calculation]
 
-        loop 10 times
-            loop pos in [X, Y]
-                P->>+R: Want random number
-                R->>R: Update random state
-                R->>-P: Send random number
-                P->>P: Update pos
-            end
+        loop forever
+            P->>RD: get Nstep
+            alt step < Nstep
+                loop pos = X, Y
+                    P->>+R: Want random number
+                    R->>R: Update random state
+                    R-->>-P: Send random number
+                    P->>P: Update pos
+                end
+                P->>P: increment own step
+                P-)RD: Store step, X, Y
+            else own step >= Nstep
+                P->>P: sleep delay
+            end            
             
-            P->>RD: Store X, Y
-
         end
         
-        deactivate P
+        %% deactivate P
     
     and [data acquisition]
 
@@ -146,6 +149,6 @@ sequenceDiagram
     
     end
 
-    DA->>-U: Stats for 10 time steps
+    DA-->>U: Stats for 10 time steps
 
 ```
