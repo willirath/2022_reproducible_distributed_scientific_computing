@@ -22,17 +22,11 @@ services:
 
   particles:
     build: ./particles
-    environment:
-      - WEB_CONCURRENCY=1
-      - TIMEOUT=3600
-    expose:
-      - 80
     depends_on:
       - rng_loadbalancer
-    # container_name: particles
-    cpus: 0.5
+    cpus: 0.15
     deploy:
-      replicas: 4
+      replicas: 9
 
   data_agg:
     build: ./data_agg
@@ -44,19 +38,19 @@ services:
       - particles
     container_name: data_agg
 
-  data_agg_redis:
-    build: ./data_agg_redis
+  redis_store:
+    build: ./redis_store
     expose:
       - 6379
-    container_name: data_agg_redis
+    container_name: redis_store
 
-  notebook:
-    build: ./notebook
+  jupyterlab:
+    build: ./jupyterlab
     ports:
       - "8888:8888"
     volumes:
-      - ./notebooks:/notebooks
+      - ../notebooks:/notebooks
     working_dir: /notebooks
     environment:
       JUPYTER_TOKEN: admin
-    container_name: notebook
+    container_name: jupyterlab
