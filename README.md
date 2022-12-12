@@ -11,8 +11,8 @@ We'll work with a 2-dimensional [random walk](https://en.wikipedia.org/wiki/Rand
 The interaction of the three components is organised like:
 ```mermaid
 graph LR;
-    Particles -->|query| RNG;
-    DataAgg -->|query| Particles;
+    Particle -->|query| RNG;
+    DataAgg -->|gather positions| Particle;
     User -->|query| DataAgg;
 ```
 
@@ -75,10 +75,10 @@ We could replicate all parts (and bring everything together in the data aggregat
 
 ```mermaid
 graph LR;
-    Particles_1 -->|query| RNG_1;
-    Particles_2 -->|query| RNG_2;
-    DataAgg -->|query| Particles_1;
-    DataAgg -->|query| Particles_2;
+    Particle_1 -->|query| RNG_1;
+    Particle_2 -->|query| RNG_2;
+    DataAgg -->|query| Particle_1;
+    DataAgg -->|query| Particle_2;
     User -->|query| DataAgg;
 ```
 
@@ -88,14 +88,31 @@ Or we could go for more complex patterns (where `RNG` is a load balancer for mul
 graph LR;
     RNG -->|proxy| RNG_1;
     RNG -->|proxy| RNG_2;
-    Particles_1 -->|query| RNG;
-    Particles_2 -->|query| RNG;
-    Particles_3 -->|query| RNG;
-    DataAgg -->|query| Particles_1;
-    DataAgg -->|query| Particles_2;
-    DataAgg -->|query| Particles_3;
+    Particle_1 -->|query| RNG;
+    Particle_2 -->|query| RNG;
+    Particle_3 -->|query| RNG;
+    DataAgg -->|query| Particle_1;
+    DataAgg -->|query| Particle_2;
+    DataAgg -->|query| Particle_3;
     User -->|query| DataAgg;
 ```
+
+Another possibility is the following:
+
+```mermaid
+graph LR;
+    RNG -->|proxy| RNG_1;
+    RNG -->|proxy| RNG_2;
+    Particle_1 -->|query| RNG;
+    Particle_2 -->|query| RNG;
+    Particle_3 -->|query| RNG;
+    DataStore -->|gather| Particle_1;
+    DataStore -->|gather| Particle_2;
+    DataStore -->|gather| Particle_3;
+    DataAgg -->|query| DataStore;
+    User -->|query| DataAgg;
+```
+Here, we can implement the data gathering by providing a REDIS store for all instances of the particle to push their positions to.
 
 *__Note__ that we can only parallelise into multiple instances of `Particles`, because in our simple problem, the individual particles don't interact with each other.*
 
@@ -113,11 +130,11 @@ To completely reproduce our non-parallelized example problem, we'd need to contr
 sequenceDiagram
     actor U as User
     participant DA as DataAgg
-    participant RD as Redis Relay
+    participant RD as Redis Store
     participant P as Particle
     participant R as RNG
 
-    DA-)RD: Set Nstep
+    DA-)RD: Set default Nstep
 
     par [calculation]
 
@@ -140,15 +157,19 @@ sequenceDiagram
         
         %% deactivate P
     
-    and [data acquisition]
-
-        loop until 10 time steps
-            DA->>RD: want new data
-            RD->>DA: send new data
+    and
+        opt view charts
+            U->>+DA: Show charts
+            DA->>RD: Get all positions
+            DA->>-U: Send charts
         end
-    
-    end
 
-    DA-->>U: Stats for 10 time steps
+    and
+        opt reconfigure
+            U->>+DA: Set new Nstep
+            DA->>-RD: Set new Nstep
+        end
+
+    end
 
 ```
