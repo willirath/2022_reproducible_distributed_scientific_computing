@@ -20,8 +20,8 @@ services:
       - "4000:4000"
     container_name: rng_loadbalancer
 
-  particles:
-    build: ./particles
+  particle:
+    build: ./particle
     depends_on:
       - rng_loadbalancer
     cpus: 0.15
@@ -35,7 +35,7 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      - particles
+      - particle
     container_name: data_agg
 
   redis_store:
