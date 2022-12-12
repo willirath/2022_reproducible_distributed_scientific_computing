@@ -30,29 +30,27 @@ class Lgc(object):
         """Initialize with an integer seed value."""
         self.x = seed
 
-    def next_rand(self, x: int = None):
+    def next_rand(self, delay: float = 0.0):
         """For a given x, return the next random x."""
-        return (self.a * x + self.c) % self.m
-
-    def query(self, x: int = None, delay: float = 0.1):
         sleep(delay)
-        if x is None:
-            self.x = self.next_rand(x=self.x)
-            return self.x
-        else:
-            return self.next_rand(x=x)
+        self.x = (self.a * self.x + self.c) % self.m
+        return self.x
+
+    def lgc_params(self):
+        """Return dict of own config."""
+        return {"a": self.a, "c": self.c, "m": self.m}
 
 
-lgc = Lgc()
+app.lgc = Lgc()
 
 
 @app.get("/lgc/")
-async def get_lgc(x: int = None, delay: float = 0.5):
+async def get_lgc(x: int = None, delay: float = 0.1):
     """Query the LGC RNG for a random integer."""
-    return lgc.query(x, delay)
+    return app.lgc.next_rand(delay)
 
 
 @app.get("/lgc_params/")
 async def get_lgc():
     """Query the LGC RNG for a random integer."""
-    return {"a": lgc.a, "c": lgc.c, "m": lgc.m}
+    return app.lgc.lgc_params()
