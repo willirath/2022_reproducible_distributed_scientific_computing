@@ -45,7 +45,7 @@ app.lgc = Lgc()
 
 
 @app.get("/lgc/")
-async def get_lgc(x: int = None, delay: float = 0.1):
+async def get_lgc(x: int = None, delay: float = 0.5):
     """Query the LGC RNG for a random integer."""
     return app.lgc.next_rand(delay)
 

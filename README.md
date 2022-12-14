@@ -2,7 +2,10 @@
 
 ## Problem and introduction
 
-We'll work with a 2-dimensional [random walk](https://en.wikipedia.org/wiki/Random_walk) application with different components.
+We'll work with a colleciton of particles each of which performs a 2-dimensional [random walk](https://en.wikipedia.org/wiki/Random_walk).
+This simple model has many similarities with actual models for physical or biophysical systems (e.g., molecular dynamics, interaction of predadors / prey, ...).
+
+## Implementation
 
 - *__(Pseudo) Random Number Generator:__* Generates pseudo-random numbers which are used to determine the steps each particle takes.  (We'll learn more about random number generation below.)
 - *__Particles:__* Handles position and movement of multiple particles.
@@ -37,26 +40,26 @@ erDiagram
 
 #### Particles
 
-We'll handle `N` particles which are moving in small and random discrete steps. For a particle with index `n` which is at step `l`, the movement can be expressed as
-$$x_{n,l+1} = x_{n,l} + \delta x$$
-$$y_{n,l+1} = y_{n,l} + \delta y$$
-$$\delta x, \delta y \in [-1, 1)$$
-where $x_{n,l}$ and $y_{n,l}$ are positions of particle $n$ at step $l$, and $\delta x$ and $\delta y$ are drawn from a uniform random distribution between -1 and 1.
+We'll handle `N` particles which are moving in small and random discrete steps. For a particle with index `n` which is at time step `t`, the movement can be expressed as
+$$x_{n,t+1} = x_{n,t} + \delta x_{n,t}$$
+$$y_{n,t+1} = y_{n,t} + \delta y_{n,t}$$
+$$\delta x_{n,t}, \delta y_{n,t} \in [-1, 1)$$
+where $x_{n,t}$ and $y_{n,t}$ are positions of particle $n$ at step $t$, and $\delta x_{n,t}$ and $\delta y_{n,t}$ are drawn from a uniform random distribution between -1 and 1.
 
 #### Data Aggregation
 
-We'll calculate two quantities which describe the overall distribution of the particles at step $l$:
+We'll calculate two quantities which describe the overall distribution of the particles at time step $t$:
 
 The _center of mass_
-$$COM_l = (\overline{x_l}, \overline{y_l})$$
+$$COM_t = (\overline{x_t}, \overline{y_t})$$
 with
-$$\overline{x_l} = \frac{1}{N}\sum_{n=1}^N x_{n,l}$$
-$$\overline{y_l} = \frac{1}{N}\sum_{n=1}^N y_{n,l}$$
+$$\overline{x_t} = \frac{1}{N}\sum_{n=1}^N x_{n,t}$$
+$$\overline{y_t} = \frac{1}{N}\sum_{n=1}^N y_{n,t}$$
 
 is the point in space where the mass-weighted sum of positions averages to zero. (Here, we assume that all particles have the same mass.)
 
 The _moment of inertia_ (relative to the center of mass)
-$$MOI_l = \sum_{n=1}^N ((x_{n,l}-\overline{x_l})^2 + (y_{n,l}-\overline{y_l})^2)$$
+$$MOI_t = \sum_{n=1}^N ((x_{n,t}-\overline{x_t})^2 + (y_{n,t}-\overline{y_t})^2)$$
 
 determines the torque one needs to apply in order to achieve an angular acceleration. _(More mass away from the center of mass means higher $MOI$.)_
 
@@ -237,8 +240,36 @@ sequenceDiagram
 
 The parallel layout detailed above has been implemented using Docker compose. See the [services/](services/) directory for details.
 
-## Exercises
+To run the services, do
+```shell
+$ git clone https://github.com/willirath/2022_reproducible_distributed_scientific_computing
+$ cd services
+$ docker-compose build
+$ docker-compose up
+```
+To stop the application, type `CTRL-C` followed by
+```shell
+$ docker-compose down
+```
 
-1. Run the setup with multiple instances of the RNG service. Check the charts and compare to a run with only one RNG instance. What do you see?
+_**Note** that there is a service called `jupyterlab` which can be reached on `http://127.0.0.1:8888/lab` (password: admin). This service is not necessary for the application to run, but it provides us with an easy interface to interact with all the services in our application._
 
-2. ...
+## Familiarize yourself (to be done within the lecture)
+
+0. Read everything in [services/](services/) and make sure you understand what each part does.
+
+1. Run the setup for the following cases, each time checking and saving the charts (see http://127.0.0.1:8080/charts). Discuss your obervations.
+   - 4 RNGs, 4 Particles
+   - 4 RNGs, 4 Particles (run again)
+   - 1 RNG, 4 Particles
+   - 1 RNG, 4 Particles (run again)
+
+By now, you should have observed a problem with reproducibility / repeatability which is present for the case with a single RNG.  You also should have observed a problem with $MOI$ for the parallel RNGs.
+
+## Exercises (on your own time)
+
+Consider one of the following exercises:
+
+### Make the RNG reproducible
+
+Above, we found two problems with multiple RNGs.

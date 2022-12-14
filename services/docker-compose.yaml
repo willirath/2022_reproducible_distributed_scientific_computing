@@ -9,7 +9,7 @@ services:
     expose:
       - 80
     deploy:
-      replicas: 1
+      replicas: 4
     cpus: 0.2
 
   rng_loadbalancer:
@@ -24,9 +24,10 @@ services:
     build: ./particle
     depends_on:
       - rng_loadbalancer
+      - redis_store
     cpus: 0.15
     deploy:
-      replicas: 9
+      replicas: 4
 
   data_agg:
     build: ./data_agg
