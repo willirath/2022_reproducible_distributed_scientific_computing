@@ -273,3 +273,15 @@ Consider one of the following exercises:
 ### Make the RNG reproducible
 
 Above, we found two problems with multiple RNGs.
+
+### Add an non-interactive component
+
+We could add an external component which acts on the particles, but does not depend on the state of the particles. This could be a gravity field which is fixed and which all the particles feel.
+
+### Add interaction between particles
+
+This is difficult and we'll only find solutions which are a compromise between concurrency / parallelism and reproducibility / exactness.
+
+### Own ideas
+
+...
