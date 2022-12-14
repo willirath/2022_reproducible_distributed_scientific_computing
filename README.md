@@ -272,16 +272,26 @@ Consider one of the following exercises:
 
 ### Make the RNG reproducible
 
-Above, we found two problems with multiple RNGs.
+Above, we found two problems with multiple RNGs:
+
+1. If we're using multiple RNGs, we need to make sure they are initialized differently. Otherwise, not all random numbers determining the evolution of the system will be independent. (Above, we saw the extreme case where all particles moved exactly synchronised.)
+
+2. If we're using multiple RNGs, we need to control the sequence of random numbers responsible for the movement of each particle.
+
+Dicuss and implement a solution for both problems. (Note that there is no single correct solution here and note that all possible solutions have downsides.)
 
 ### Add an non-interactive component
 
 We could add an external component which acts on the particles, but does not depend on the state of the particles. This could be a gravity field which is fixed and which all the particles feel.
+ 
+The implementation would need to add the component itself and also modify the particle code in order for the particles to communicate with the new component.
 
 ### Add interaction between particles
 
 This is difficult and we'll only find solutions which are a compromise between concurrency / parallelism and reproducibility / exactness.
 
+A simple interaction we could add is a gravitational pull towards the center of mass of all the particles.  This could be implemented by extending the non-interactive component discussed above by allowing for it to know (from the REDIS store) the position of each particle.  Then, we could communicate the resulting gravity field to all particles and let them feel the resulting force.
+
 ### Own ideas
 
-...
+Feel free to explore own ideas here.
