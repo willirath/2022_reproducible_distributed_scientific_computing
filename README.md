@@ -2,7 +2,7 @@
 
 ## Problem and introduction
 
-We'll work with a colleciton of particles each of which performs a 2-dimensional [random walk](https://en.wikipedia.org/wiki/Random_walk).
+We'll work with a collection of particles each of which performs a 2-dimensional [random walk](https://en.wikipedia.org/wiki/Random_walk).
 This simple model has many similarities with actual models for physical or biophysical systems (e.g., molecular dynamics, interaction of predadors / prey, ...).
 
 ## Implementation
