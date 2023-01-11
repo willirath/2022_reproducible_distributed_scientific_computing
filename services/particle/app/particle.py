@@ -13,8 +13,8 @@ class Particle(object):
     def __init__(self, x: int = 0, y: int = 0, t: int = 0):
         self.x, self.y, self.t = x, y, t
         self.redis_setup()
-        self.lgc_params = requests.get(
-            "http://rng_loadbalancer:4000/lgc_params/"
+        self.lcg_params = requests.get(
+            "http://rng_loadbalancer:4000/lcg_params/"
         ).json()
         self.run_main_loop()
 
@@ -27,9 +27,9 @@ class Particle(object):
 
     def get_rand(self, x: int = None):
         """Get random number from RNG service and scale to [-1, 1)."""
-        resp = requests.get("http://rng_loadbalancer:4000/lgc/", params={"x": x})
+        resp = requests.get("http://rng_loadbalancer:4000/lcg/", params={"x": x})
         N = int(resp.json())
-        return 2 * N / self.lgc_params["m"] - 1
+        return 2 * N / self.lcg_params["m"] - 1
 
     def step(self):
         """Move by random step and increment time step."""
