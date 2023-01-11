@@ -276,6 +276,9 @@ Documentation of some of the libraries used herer:
 - Docker-compose: https://docs.docker.com/compose/
 - Pandas (a tabular-data libarary): https://pandas.pydata.org/docs/user_guide/index.html
 - FastAPI: https://fastapi.tiangolo.com/
+- Mermaid (all the diagrams were done with it): https://mermaid.js.org/intro/
+- Mermaid live editor: https://mermaid.live/
+
 
 ## Exercises (on your own time)
 
