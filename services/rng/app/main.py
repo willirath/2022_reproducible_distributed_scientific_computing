@@ -6,7 +6,7 @@ app = FastAPI()
 
 
 class Lgc(object):
-    """LGC RNG.
+    """LCG RNG.
     
     See <https://en.wikipedia.org/wiki/Linear_congruential_generator>
 
@@ -36,21 +36,21 @@ class Lgc(object):
         self.x = (self.a * self.x + self.c) % self.m
         return self.x
 
-    def lgc_params(self):
+    def lcg_params(self):
         """Return dict of own config."""
         return {"a": self.a, "c": self.c, "m": self.m}
 
 
-app.lgc = Lgc()
+app.lcg = Lgc()
 
 
-@app.get("/lgc/")
-async def get_lgc(x: int = None, delay: float = 0.5):
-    """Query the LGC RNG for a random integer."""
-    return app.lgc.next_rand(delay)
+@app.get("/lcg/")
+async def get_lcg(x: int = None, delay: float = 0.5):
+    """Query the LCG RNG for a random integer."""
+    return app.lcg.next_rand(delay)
 
 
-@app.get("/lgc_params/")
-async def get_lgc():
-    """Query the LGC RNG for a random integer."""
-    return app.lgc.lgc_params()
+@app.get("/lcg_params/")
+async def get_lcg():
+    """Query the LCG RNG for a random integer."""
+    return app.lcg.lcg_params()

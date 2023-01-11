@@ -81,7 +81,7 @@ where $a$, $c$, and $m$ are unsigned integers and where $m$ determines the maxim
 
 The LCG has many disadvantages, which render it un-usable for real scientific applications. Here, however, we'll take advantage of the very simple structure of the LCG and ignore these.
 
-*__Note__ that for "good" pRNG's, the internal state can be quite large (e.g. 2.5kB for the standard generator used in Numpy and Matlab). For LGCs, hoever, the internal state is completely determined by the single unsigned integer $R$.*
+*__Note__ that for "good" pRNG's, the internal state can be quite large (e.g. 2.5kB for the standard generator used in Numpy and Matlab). For LCGs, hoever, the internal state is completely determined by the single unsigned integer $R$.*
 
 ## Parallelisation
 
@@ -258,13 +258,24 @@ _**Note** that there is a service called `jupyterlab` which can be reached on `h
 
 0. Read everything in [services/](services/) and make sure you understand what each part does.
 
-1. Run the setup for the following cases, each time checking and saving the charts (see http://127.0.0.1:8080/charts). Discuss your obervations.
+0. Start the services using the steps outlined above.
+
+0. For those services that rely on [FastAPI](https://fastapi.tiangolo.com/), there is a `docs/` endpoint providing interactive documentation to the API. (Check, for example:  http://127.0.0.1:8080/docs/)
+
+0. Run the setup for the following cases, each time checking and saving the charts (see http://127.0.0.1:8080/charts). Discuss your obervations.
    - 4 RNGs, 4 Particles
    - 4 RNGs, 4 Particles (run again)
    - 1 RNG, 4 Particles
    - 1 RNG, 4 Particles (run again)
 
 By now, you should have observed a problem with reproducibility / repeatability which is present for the case with a single RNG.  You also should have observed a problem with $MOI$ for the parallel RNGs.
+
+## Docs
+
+Documentation of some of the libraries used herer:
+- Docker-compose: https://docs.docker.com/compose/
+- Pandas (a tabular-data libarary): https://pandas.pydata.org/docs/user_guide/index.html
+- FastAPI: https://fastapi.tiangolo.com/
 
 ## Exercises (on your own time)
 
@@ -278,7 +289,9 @@ Above, we found two problems with multiple RNGs:
 
 2. If we're using multiple RNGs, we need to control the sequence of random numbers responsible for the movement of each particle.
 
-Dicuss and implement a solution for both problems. (Note that there is no single correct solution here and note that all possible solutions have downsides.)
+Dicuss and implement a solution for one or for both problems.
+
+Note that there is no single correct solution here and note that all possible solutions have downsides.
 
 ### Add an non-interactive component
 
