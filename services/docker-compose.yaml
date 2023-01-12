@@ -19,12 +19,18 @@ services:
     ports:
       - "4000:4000"
     container_name: rng_loadbalancer
+    healthcheck:
+      test: curl --fail http://rng_loadbalancer:4000/lcg_params/ || exit 1
+      interval: 2s
+      retries: 10
 
   particle:
     build: ./particle
     depends_on:
-      - rng_loadbalancer
-      - redis_store
+      rng_loadbalancer:
+        condition: service_healthy
+      redis_store:
+        condition: service_started
     cpus: 0.15
     deploy:
       replicas: 4
