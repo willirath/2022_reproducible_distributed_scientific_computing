@@ -74,7 +74,6 @@ class DataAgg(object):
         particle_ids = list(
             map(lambda b: b.decode("utf-8"), self.redis_store.smembers("particle_ids"))
         )
-	   
         particle_positions = []
         for pid in particle_ids:
             _t = list(map(int, self.redis_store.lrange(f"{pid}:t", 0, -1)))
