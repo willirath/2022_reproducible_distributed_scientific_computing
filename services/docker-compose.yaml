@@ -9,7 +9,7 @@ services:
     expose:
       - 80
     deploy:
-      replicas: 1
+      replicas: 4
     cpus: 0.2
 
   rng_loadbalancer:
